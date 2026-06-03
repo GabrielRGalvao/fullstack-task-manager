@@ -1,4 +1,4 @@
-# Fullstack Task Manager 🚀
+# SwiftDo 🚀
 
 Aplicativo mobile desenvolvido com React Native para gerenciamento inteligente de tarefas em tempo real, integrando um banco de dados reativo na nuvem.
 
@@ -43,5 +43,5 @@ Possuir o Node.js instalado e o aplicativo **Expo Go** instalado no celular (ou 
 
 1. **Clone o repositório:**
 ```bash
-git clone https://github.com/GabrielRGalvao/fullstack-task-manager.git
-cd meu-app-expo
+git https://github.com/GabrielRGalvao/swiftdo-app.git
+cd swiftdo-app
