@@ -1,7 +1,7 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useMutation, useQuery } from "convex/react";
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { api } from "../../convex/_generated/api";
 
 export default function TodoScreen() {
@@ -27,7 +27,10 @@ export default function TodoScreen() {
   const handleSalvarTarefa = async () => {
     const prazoParaSalvar = prazoTexto.trim().length === 0 ? "Sem prazo" : prazoTexto;
 
-    if (!novoAssunto.trim()) return;
+    if (!novoAssunto.trim()) {
+      Alert.alert("Campo Vazio", "Digite o nome da tarefa.");
+      return;
+    }
 
     await adicionarTarefa({
       assunto: novoAssunto,
@@ -35,21 +38,31 @@ export default function TodoScreen() {
       prazo: prazoParaSalvar,
     });
 
+    Alert.alert("Feito", "Tarefa adicionada com sucesso! 📝");
+
     setNovoAssunto('');
     setPrazoTexto('');
   };
 
   const handleAlternarStatus = async (id: any, statusAtual: boolean) => {
     await alternarStatus({ id, atual: statusAtual });
+  
+    // Lógica: se a tarefa NÃO estava finalizada (!statusAtual), 
+    // significa que agora ela FOI finalizada.
+    if (!statusAtual) {
+      Alert.alert("Parabéns!", "Tarefa concluída com sucesso! ✅");
+    }
   };
 
   const handleExcluirTarefa = async (id: any) => {
     await removerTarefa({ id });
+    
+    Alert.alert("Feito", "Tarefa excluída com sucesso! 🗑️");
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Lista de Tarefas 📝</Text>
+      <Text style={styles.title}>SwiftDo ✍️</Text>
 
       <View style={styles.inputContainer}>
         <TextInput
@@ -65,7 +78,7 @@ export default function TodoScreen() {
           style={styles.dateButton}
         >
           <Text style={styles.dateButtonText}>
-            {prazoTexto ? `📅 Prazo: ${prazoTexto}` : '📅 Adicionar a data (opcional)'}
+            {prazoTexto ? `🗓️ Prazo: ${prazoTexto}` : '🗓️ Adicionar a data (opcional)'}
           </Text>
         </TouchableOpacity>
 
@@ -86,7 +99,8 @@ export default function TodoScreen() {
 
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         <Text style={styles.subtitle}>Tarefas:</Text>
-        
+        <Text style={styles.hintText}>💡 Dica: Toque na tarefa para marcar como concluída ou para desmarcar</Text>
+
         {tarefas === undefined ? (
           <Text style={styles.loadingText}>Carregando...</Text>
         ) : (
@@ -118,7 +132,7 @@ export default function TodoScreen() {
                 onPress={() => handleExcluirTarefa(tarefa._id)}
                 style={styles.deleteButton}
               >
-                <Text style={styles.deleteButtonText}>X</Text>
+                <Text style={styles.deleteButtonText}>🗑️</Text>
               </TouchableOpacity>
             </View>
           ))
@@ -129,11 +143,45 @@ export default function TodoScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F0F2F5', padding: 20, paddingTop: 60 },
-  title: { fontSize: 28, fontWeight: 'bold', color: '#1C1C1E', marginBottom: 20 },
-  subtitle: { fontSize: 16, color: '#666', marginBottom: 10, fontWeight: '600' },
-  inputContainer: { flexDirection: 'column', marginBottom: 30 },
-  input: { backgroundColor: '#FFF', padding: 15, borderRadius: 12, fontSize: 16, elevation: 2, color: '#333', marginBottom: 10 },
+  container: {
+    flex: 1,
+    backgroundColor: '#F0F2F5',
+    padding: 20,
+    paddingTop: 60,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#1C1C1E',
+    letterSpacing: -0.5,
+    marginBottom: 5,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 10,
+    fontWeight: '600',
+  },
+  hintText: {
+    fontSize: 12,
+    color: '#8E8E93',
+    fontStyle: 'italic',
+    marginTop: 4,
+    marginBottom: 10,
+  },
+  inputContainer: {
+    flexDirection: 'column',
+    marginBottom: 30,
+  },
+  input: {
+    backgroundColor: '#FFF',
+    padding: 15,
+    borderRadius: 12,
+    fontSize: 16,
+    elevation: 2,
+    color: '#333',
+    marginBottom: 10,
+  },
   dateButton: {
     backgroundColor: '#F2F2F7',
     padding: 12,
@@ -141,18 +189,54 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E5E5EA',
     marginBottom: 10,
-    alignItems: 'center'
+    alignItems: 'center',
   },
-  dateButtonText: { color: '#007AFF', fontWeight: '500' },
-  saveButton: { backgroundColor: '#007AFF', padding: 15, borderRadius: 12, alignItems: 'center' },
-  saveButtonText: { color: '#FFF', fontSize: 16, fontWeight: 'bold' },
-  cardWrapper: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-  card: { flex: 1, backgroundColor: '#FFF', padding: 15, borderRadius: 12, flexDirection: 'row', alignItems: 'center', elevation: 1 },
-  cardFinished: { opacity: 0.5 },
-  cardText: { fontSize: 16, color: '#333' },
-  textFinished: { textDecorationLine: 'line-through', color: '#8E8E93' },
-  priorityTag: { width: 5, height: 20, marginRight: 15, borderRadius: 5 },
-  loadingText: { textAlign: 'center', marginTop: 20, color: '#999' },
+  dateButtonText: {
+    color: '#007AFF',
+    fontWeight: '500',
+  },
+  saveButton: {
+    backgroundColor: '#007AFF',
+    padding: 15,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  saveButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  cardWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  card: {
+    flex: 1,
+    backgroundColor: '#FFF',
+    padding: 15,
+    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    elevation: 1,
+  },
+  cardFinished: {
+    opacity: 0.5,
+  },
+  cardText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  textFinished: {
+    textDecorationLine: 'line-through',
+    color: '#8E8E93',
+  },
+  priorityTag: {
+    width: 5,
+    height: 20,
+    marginRight: 15,
+    borderRadius: 5,
+  },
   deleteButton: {
     backgroundColor: 'rgba(255, 59, 48, 0.1)',
     padding: 8,
@@ -163,5 +247,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  deleteButtonText: { color: '#FF3B30', fontWeight: 'bold', fontSize: 18 }
+  deleteButtonText: {
+    color: '#FF3B30',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  loadingText: {
+    textAlign: 'center',
+    marginTop: 20,
+    color: '#999',
+  },
 });
