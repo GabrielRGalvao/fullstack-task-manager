@@ -43,5 +43,5 @@ Possuir o Node.js instalado e o aplicativo **Expo Go** instalado no celular (ou 
 
 1. **Clone o repositório:**
 ```bash
-git https://github.com/GabrielRGalvao/swiftdo-app.git
+git clone https://github.com/GabrielRGalvao/swiftdo-app.git
 cd swiftdo-app
