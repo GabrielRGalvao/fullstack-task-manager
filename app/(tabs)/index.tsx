@@ -47,8 +47,7 @@ export default function TodoScreen() {
   const handleAlternarStatus = async (id: any, statusAtual: boolean) => {
     await alternarStatus({ id, atual: statusAtual });
   
-    // Lógica: se a tarefa NÃO estava finalizada (!statusAtual), 
-    // significa que agora ela FOI finalizada.
+    
     if (!statusAtual) {
       Alert.alert("Parabéns!", "Tarefa concluída com sucesso! ✅");
     }

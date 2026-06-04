@@ -3,7 +3,6 @@ import { v } from "convex/values";
 
 export default defineSchema({
 
-// tabela de tarefas
 tarefas: defineTable({
   assunto: v.string(),
   finalizada: v.boolean(),
