@@ -1,6 +1,7 @@
-# SwiftDo 🚀
+# SwiftDo 
 
-Aplicativo mobile desenvolvido com React Native para gerenciamento inteligente de tarefas em tempo real, integrando um banco de dados reativo na nuvem.
+Aplicativo mobile de tarefas com sincronização em tempo real, desenvolvido com React Native, Expo, TypeScript e Convex.
+
 
 ## 🎯 Objetivo
 
